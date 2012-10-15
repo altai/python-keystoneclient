@@ -5,9 +5,7 @@
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
 %endif
 
-%global os_release essex
-
-Name:             python-keystoneclient-%{os_release}
+Name:             python-keystoneclient
 Version:          2012.1
 Release:          1%{?dist}
 Epoch:            1
@@ -33,7 +31,7 @@ Requires:         python-prettytable
 
 Requires:         python-argparse
 
-Conflicts:        python-keystoneclient
+Obsoletes:        %{name}-essex
 
 %description
 This is a client for the OpenStack Keystone API. There is a Python API (the
