@@ -50,7 +50,8 @@ Documentation for %{name}.
 %endif
 
 %prep
-%setup -q -n %{name}-%{version}
+%setup -q
+sed -i '/simplejson/d' tools/pip-requires
 
 
 %build
