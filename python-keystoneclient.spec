@@ -1,4 +1,3 @@
-%global enable_doc 0
 %define mod_name keystoneclient
 
 %if ! (0%{?fedora} > 12 || 0%{?rhel} > 5)
@@ -22,8 +21,9 @@ BuildRoot:        %{_tmppath}/%{name}-%{version}
 BuildArch:        noarch
 BuildRequires:    python-setuptools
 
-%if 0%{?enable_doc}
-BuildRequires:    python-sphinx make
+%if 0%{?with_doc}
+BuildRequires:    python-sphinx10
+BuildRequires:    make
 %endif
 
 Requires:         python-httplib2
@@ -38,7 +38,7 @@ This is a client for the OpenStack Keystone API. There is a Python API (the
 keystoneclient module), and a command-line script (keystone).
 
 
-%if 0%{?enable_doc}
+%if 0%{?with_doc}
 %package doc
 Summary:        Documentation for %{name}
 Group:          Documentation
@@ -63,8 +63,11 @@ rm -rf %{buildroot}
 
 %{__python} setup.py install -O1 --skip-build --root %{buildroot}
 
-%if 0%{?enable_doc}
-make -C docs html PYTHONPATH=%{buildroot}%{python_sitelib}
+%if 0%{?with_doc}
+make -C doc html PYTHONPATH=%{buildroot}%{python_sitelib} SPHINXBUILD=sphinx-1.0-build
+
+# Fix hidden-file-or-dir warnings
+rm -fr doc/build/html/.buildinfo
 %endif
 
 %clean
@@ -73,15 +76,15 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc README.rst LICENSE HACKING
+%doc README* LICENSE HACKING*
 %{python_sitelib}/%{mod_name}*
 %{python_sitelib}/python_keystoneclient*.egg-info
 %{_usr}/bin/*
 
-%if 0%{?enable_doc}
+%if 0%{?with_doc}
 %files doc
 %defattr(-,root,root,-)
-%doc docs/_build/html
+%doc doc/build/html
 %endif
 
 %changelog
